@@ -1,0 +1,49 @@
+{
+  "type": [
+    "dog",
+    "child",
+    "child"
+  ],
+  "movement": [
+    "circular",
+    "circular",
+    "linear"
+  ],
+  "treePositions": [
+    {
+      "x": "-0.53",
+      "y": "0.46",
+      "z": "-1"
+    },
+    {
+      "x": ".83",
+      "y": "0.46",
+      "z": "-1.2"
+    },
+    {
+      "x": "-0.7",
+      "y": "0.46",
+      "z": "-1.4"
+    }
+  ],
+  "reward": "high",
+  "penalty": "low",
+  "endAtCollision": "true",
+  "animatedPositions": [
+    {
+      "x": "0.3",
+      "y": "0.46",
+      "z": "-1"
+    },
+    {
+      "x": ".83",
+      "y": "0.46",
+      "z": "-1.8"
+    },
+    {
+      "x": "0.7",
+      "y": "0.46",
+      "z": "-1.4"
+    }
+  ]
+}
