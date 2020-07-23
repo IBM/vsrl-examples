@@ -3,8 +3,6 @@ This folder contains the following Unity3D environment builds:
 - [DroneDelivery](./DroneDelivery.md) - the agent is a drone trying to deliver a package.
 - [SafeDroneDelivery](./SafeDroneDelivery.md) - a variation of the DroneDelivery environment that ensures
 safety from collisions.
-- [... more environments go here. also, we should update this before release so the environment and its
-binary have the same name]
 
 Each environment is configurable with a [`env_config.json`](./env_config.json) file. 
 
