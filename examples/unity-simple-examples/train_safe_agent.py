@@ -34,6 +34,7 @@ INDEX_DRONE_POS_X = 1
 INDEX_DRONE_POS_Y = 2
 VEL_X = 0
 VEL_Y = 0
+PlotInfoYN = False
 
 
 # Safe policy of three layers of size 256 each
@@ -327,8 +328,6 @@ if __name__ == '__main__':
     unity_env = UnityEnv(env_name, worker_id=10, use_visual=False)
     safe_monitor = SafeMonitor(unity_env, log_dir)
     environment = DummyVecEnv([lambda: safe_monitor])
-
-    PlotInfoYN = False
 
     if PlotInfoYN:
         model = PPO2(SafePolicy, environment, verbose=1, learning_rate=learning_rate)
