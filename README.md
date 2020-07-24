@@ -21,6 +21,7 @@ wrapper.
 
 ### Requirements
 - [Python 3.6 or 3.7](https://www.python.org/downloads/)
+- [Pre-compiled binaries](https://github.com/IBM/vsrl-examples/releases/tag/untagged-f67218e83e56ab6c64e4) - Please read instructions [here](https://github.com/IBM/vsrl-examples/tree/master/examples/EnvBuild)
 - (optional, only to create new environments) [Unity Hub](https://store.unity.com/download)
 
 ### Setup
