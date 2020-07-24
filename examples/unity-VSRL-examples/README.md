@@ -18,11 +18,11 @@ from stable_baselines import PPO2
 from vsrl.rl.envs.safety_wrappers import wrap_environment, wrap_symbolic_observation_env
 from safe_environment import DroneEnv
 
-env_name = "DroneDelivery"
+env_name = "../EnvBuild/DroneDelivery"
 # note: the safety constraints depend on knowing the dynamics type (circular or linear)
 # for each object. That could be passed in directly or, as here, loaded from the
 # environment config file.
-with open("env_config.json") as f:
+with open("../EnvBuild/env_config.json") as f:
     dynamics_types = json.load(f)["movement"]
 
 SafeDroneEnv = wrap_symbolic_observation_env(wrap_environment(DroneEnv))
