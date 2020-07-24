@@ -16,7 +16,7 @@ Note - for the theoretical results from the VSRL paper to hold, the agent should
 import json
 from stable_baselines import PPO2
 from vsrl.rl.envs.safety_wrappers import wrap_environment, wrap_symbolic_observation_env
-from vsrl_framework_interface import DroneEnv
+from safe_environment import DroneEnv
 
 env_name = "DroneDelivery"
 # note: the safety constraints depend on knowing the dynamics type (circular or linear)
