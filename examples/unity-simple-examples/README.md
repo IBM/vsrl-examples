@@ -59,9 +59,11 @@ and ensure safety. `SafeMonitor` is a monitor wrapper that tracks collisions tha
 
 Below is an example training a safe agent using `PPO2` from Stable Baselines with these classes:
 ```python
+import os
 from gym_unity.envs import UnityEnv
 from stable_baselines import PPO2
-from safe_policy import SafePolicy 
+from stable_baselines.common.vec_env import DummyVecEnv
+from safe_policy import SafeMonitor, SafePolicy
 
 log_dir = "tmp_log/"
 os.makedirs(log_dir, exist_ok=True)
