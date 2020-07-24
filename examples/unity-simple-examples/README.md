@@ -53,28 +53,30 @@ env.close()
 
 
 ## Train a safe agent in a Unity3D Environment
-`train_safe_agent.py` shows the training of a simple agent using `SafePolicy`, which checks if each chosen 
-action is safe. If it is not, a safe action is found by randomly sampling the space around. 
-With this policy, the agent can train in any environment and ensure safety.
+In `safe_policy` are classes `SafePolicy` and `SafeMonitor`. `SafePolicy` checks if each chosen action is safe. If not, 
+a safe action is found by randomly sampling the space around. With this policy, the agent can train in any environment 
+and ensure safety. `SafeMonitor` is a monitor wrapper that tracks collisions that occur while training.  
 
-To train using `PPO2` from Stable Baselines with `SafePolicy` in a Unity environment:
+Below is an example training a safe agent using `PPO2` from Stable Baselines with these classes:
 ```python
 from gym_unity.envs import UnityEnv
 from stable_baselines import PPO2
-from train_safe_agent import SafePolicy 
+from safe_policy import SafePolicy 
+
+log_dir = "tmp_log/"
+os.makedirs(log_dir, exist_ok=True)
 
 file_name = 'DroneDelivery'
 env_name = "../EnvBuild/" + file_name
-env = UnityEnv(env_name, worker_id=10, use_visual=False, no_graphics=False)
+unity_env = UnityEnv(env_name, worker_id=10, use_visual=False)
 
-model = PPO2(SafePolicy, env, verbose=1)
-model.learn(total_timesteps=1000)
+# Wrap environment to keep track of collisions
+safe_monitor = SafeMonitor(unity_env, log_dir)
+environment = DummyVecEnv([lambda: safe_monitor])
 
-obs = env.reset()
-for i in range(1000):
-    action, _states = model.predict(obs)
-    obs, rewards, done, info = env.step(action)
-    env.render()
-
-env.close()
+model = PPO2(SafePolicy, environment, verbose=0, tensorboard_log="./ppo_sb_tensorboard/",
+             learning_rate=5.0e-4)
+model.learn(total_timesteps=1000000, tb_log_name='SafeRL')
+model.save("unity_SafeRL_model.pkl")
+environment.close()
 ```
