@@ -144,36 +144,37 @@ class SafeMonitor(Monitor):
         self.total_steps += 1
         return observation, reward, done, info
 
+if __name__ == '__main__':
 
-UseVSRL = True#False
+    UseVSRL = True#False
 
-log_dir = "tmp_log/"
-os.makedirs(log_dir, exist_ok=True)
-if UseVSRL:
-    log_dir+='VSRL_'
-    tb_name='VSRL'
-else:
-    log_dir+='StandardRL_'
-    tb_name='StandardRL'
+    log_dir = "tmp_log/"
+    os.makedirs(log_dir, exist_ok=True)
+    if UseVSRL:
+        log_dir+='VSRL_'
+        tb_name='VSRL'
+    else:
+        log_dir+='StandardRL_'
+        tb_name='StandardRL'
 
-file_name = 'DroneDelivery'
-env_name = "../EnvBuild/" + file_name
+    file_name = 'DroneDelivery'
+    env_name = "../EnvBuild/" + file_name
 
-env = UnityEnv(env_name, worker_id=111, use_visual=False)
-tmp_env = DroneEnv(env_name, worker_id=0)
-SafePolicy.constraint_func = tmp_env.constraint_func
-SafePolicy.constrained_sample = tmp_env.constrained_sample
-tmp_env.close()
-env = SafeMonitor(env, log_dir)
-env = DummyVecEnv([lambda: env])
+    env = UnityEnv(env_name, worker_id=111, use_visual=False)
+    tmp_env = DroneEnv(env_name, worker_id=0)
+    SafePolicy.constraint_func = tmp_env.constraint_func
+    SafePolicy.constrained_sample = tmp_env.constrained_sample
+    tmp_env.close()
+    env = SafeMonitor(env, log_dir)
+    env = DummyVecEnv([lambda: env])
 
-PlotYN = False
-model = PPO2(SafePolicy, env, verbose=0, tensorboard_log="./ppo_sb_tensorboard/", learning_rate = 5.0e-4)
-# PlotYN = True
-# model = PPO2(SafePolicy, env, verbose=0, learning_rate = 5.0e-4)
-# model.learn(total_timesteps=1000000, tb_log_name="VSRL", callback=TensorboardCallback())
+    PlotYN = False
+    model = PPO2(SafePolicy, env, verbose=0, tensorboard_log="./ppo_sb_tensorboard/", learning_rate = 5.0e-4)
+    # PlotYN = True
+    # model = PPO2(SafePolicy, env, verbose=0, learning_rate = 5.0e-4)
+    # model.learn(total_timesteps=1000000, tb_log_name="VSRL", callback=TensorboardCallback())
 
-model.learn(total_timesteps=1000000, tb_log_name=tb_name)
-model.save("unity_"+tb_name+"_model.pkl")
+    model.learn(total_timesteps=1000000, tb_log_name=tb_name)
+    model.save("unity_"+tb_name+"_model.pkl")
 
-env.close()
+    env.close()
