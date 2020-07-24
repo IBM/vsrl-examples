@@ -115,20 +115,22 @@ class DroneEnv(UnityEnv):
         return (x1 - x2) ** 2 + (y1 - y2) ** 2 < self.safe_sep ** 2
 
 
-env_name = "../EnvBuild/DroneDelivery"
-with open("../EnvBuild/env_config.json") as f:
-    dynamics_types = json.load(f)["movement"]
+if __name__ == '__main__':
 
-SafeDroneEnv = wrap_symbolic_observation_env(wrap_environment(DroneEnv))
-# LINUX: Disable the Unity window -> no_graphics=True
-env = SafeDroneEnv(
-    env_name,
-    dynamics_types=dynamics_types,
-    worker_id=0,
-    use_visual=False,
-    no_graphics=False,
-)
+    env_name = "../EnvBuild/DroneDelivery"
+    with open("../EnvBuild/env_config.json") as f:
+        dynamics_types = json.load(f)["movement"]
 
-model = PPO2("MlpPolicy", env, verbose=1)
-model.learn(total_timesteps=1000)
-env.close()
+    SafeDroneEnv = wrap_symbolic_observation_env(wrap_environment(DroneEnv))
+    # LINUX: Disable the Unity window -> no_graphics=True
+    env = SafeDroneEnv(
+        env_name,
+        dynamics_types=dynamics_types,
+        worker_id=0,
+        use_visual=False,
+        no_graphics=False,
+    )
+
+    model = PPO2("MlpPolicy", env, verbose=1)
+    model.learn(total_timesteps=1000)
+    env.close()
