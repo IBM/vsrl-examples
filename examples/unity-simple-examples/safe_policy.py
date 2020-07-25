@@ -115,7 +115,7 @@ class SafePolicy(ActorCriticPolicy):
         # if the action is safe, use it. otherwise, check another possible action
         if not is_action_safe(drone_info, action[VEL_X])[0]:
             safe_actions = []
-            for i in range(max_tries):
+            for _ in range(max_tries):
                 alternative_action = [10 * (random.random() - 0.5), 10 * (random.random() - 0.5)]
                 if is_action_safe(drone_info, alternative_action)[0]:
                     safe_actions.append(alternative_action)
