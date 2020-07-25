@@ -27,7 +27,7 @@ wrapper.
 ### Setup
 Clone the repository and open the project folder.
 ```sh
-git clone git@github.ibm.com:etx-vsrl/vsrl-os-examples.git
+git clone https://github.com/IBM/vsrl-examples.git
 cd vsrl-os-examples
 ```
 
