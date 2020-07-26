@@ -6,7 +6,7 @@ safety from collisions.
 
 Each environment is configurable with a [`env_config.json`](./env_config.json) file. 
 
-You can dowload pre-compiled binaries from the [Release section](https://github.com/IBM/vsrl-examples/releases/tag/untagged-f67218e83e56ab6c64e4)
+You can dowload pre-compiled binaries from the [Release section](https://github.com/IBM/vsrl-examples/releases/tag/v0.1)
 
 ## Configuration file location
 The config file must be placed in a different folder according to the architecture:
