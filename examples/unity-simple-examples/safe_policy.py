@@ -6,19 +6,16 @@
 #
 
 import csv
-import os
 import random
 import time
 import gym
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 import tensorflow as tf
-from gym_unity.envs import UnityEnv
-from stable_baselines import PPO2
-from stable_baselines.bench import Monitor
 from stable_baselines.common.policies import ActorCriticPolicy, mlp_extractor
 from stable_baselines.common.tf_layers import linear
-from stable_baselines.common.vec_env import DummyVecEnv
+from stable_baselines.bench import Monitor
+
 
 delta_time = 0.1
 num_animated = 3
@@ -26,7 +23,6 @@ animated_start_index = 4
 max_tries = 100
 tree_start_index = animated_start_index + num_animated * 3
 num_trees = 3
-learning_rate = 5.0e-4
 SAFE_SEP = 0.3
 SAFE_SEP_DOG = 0.4
 INDEX_DRONE_DISTANCE_TARGET = 0
@@ -34,10 +30,8 @@ INDEX_DRONE_POS_X = 1
 INDEX_DRONE_POS_Y = 2
 VEL_X = 0
 VEL_Y = 0
-PlotInfoYN = False
 
 
-# Safe policy of three layers of size 256 each
 class SafePolicy(ActorCriticPolicy):
     """
     Safe Policy object that implements actor critic with a choice of Safe Actions, using a feed forward neural network.
@@ -83,9 +77,6 @@ class SafePolicy(ActorCriticPolicy):
         Parameters:
             obs ([float]): Observation vector
         """
-        if PlotInfoYN:
-            return
-
         drone_info = obs[0]
 
         plt.clf()
@@ -98,36 +89,6 @@ class SafePolicy(ActorCriticPolicy):
             ox = drone_info[i + 1]
             oy = drone_info[i + 2]
             plt.plot(ox, oy, 'o', color='r')
-
-    @staticmethod
-    def __plot_new_safe_position(drone_info, new_velocity):
-        if PlotInfoYN:
-            plt.plot(drone_info[INDEX_DRONE_POS_X] + new_velocity[VEL_X] * delta_time,
-                     drone_info[INDEX_DRONE_POS_Y] + new_velocity[VEL_Y] * delta_time, 'sy')
-
-    @staticmethod
-    def __plot_position_valid_after_colision(drone_info, new_velocity):
-        if PlotInfoYN:
-            plt.plot(drone_info[INDEX_DRONE_POS_X] + new_velocity[VEL_X] * delta_time,
-                     drone_info[INDEX_DRONE_POS_Y] + new_velocity[VEL_Y] * delta_time, '.g')
-
-    @staticmethod
-    def __plot_not_new_valid_position(drone_info, new_velocity):
-        if PlotInfoYN:
-            plt.plot(drone_info[INDEX_DRONE_POS_X] + new_velocity[VEL_X] * delta_time,
-                     drone_info[INDEX_DRONE_POS_Y] + new_velocity[VEL_Y] * delta_time, '.r')
-
-    @staticmethod
-    def __plot_end_step(drone_info, new_velocity):
-        if PlotInfoYN:
-            plt.plot(
-                [drone_info[INDEX_DRONE_POS_X], drone_info[INDEX_DRONE_POS_X] + new_velocity[VEL_X] * delta_time],
-                [drone_info[INDEX_DRONE_POS_Y], drone_info[INDEX_DRONE_POS_Y] + new_velocity[VEL_Y] * delta_time], 'g')
-            plt.xlim([-2, 2])
-            plt.ylim([-2, 0])
-            plt.title(is_action_safe(drone_info, new_velocity))
-            plt.draw()
-            plt.pause(0.0001)
 
     def step(self, obs, state=None, mask=None, deterministic=False):
         """
@@ -152,26 +113,19 @@ class SafePolicy(ActorCriticPolicy):
         drone_info = obs[0]
 
         # if the action is safe, use it. otherwise, check another possible action
-        if is_action_safe(drone_info, action[VEL_X])[0]:
-            self.__plot_new_safe_position(drone_info, action[VEL_X])
-        else:
+        if not is_action_safe(drone_info, action[VEL_X])[0]:
             safe_actions = []
-            for i in range(max_tries):
+            for _ in range(max_tries):
                 alternative_action = [10 * (random.random() - 0.5), 10 * (random.random() - 0.5)]
                 if is_action_safe(drone_info, alternative_action)[0]:
-                    self.__plot_position_valid_after_colision(drone_info, alternative_action[0])
                     safe_actions.append(alternative_action)
                     break
-                else:
-                    self.__plot_not_new_valid_position(drone_info, action[0])
 
             if safe_actions:
                 action = random.choices(safe_actions)
             else:
                 print("No Safe Action found")
                 action = np.array([[0, 0]])
-
-        self.__plot_end_step(drone_info, action[0])
 
         return action, value, self.initial_state, neglogp
 
@@ -315,27 +269,3 @@ class SafeMonitor(Monitor):
 
         self.total_steps += 1
         return observation, reward, done, info
-
-
-if __name__ == '__main__':
-
-    log_dir = "tmp_log/"
-    os.makedirs(log_dir, exist_ok=True)
-
-    file_name = 'DroneDelivery'
-    env_name = "../EnvBuild/" + file_name
-
-    unity_env = UnityEnv(env_name, worker_id=10, use_visual=False)
-    safe_monitor = SafeMonitor(unity_env, log_dir)
-    environment = DummyVecEnv([lambda: safe_monitor])
-
-    if PlotInfoYN:
-        model = PPO2(SafePolicy, environment, verbose=1, learning_rate=learning_rate)
-    else:
-        model = PPO2(SafePolicy, environment, verbose=0, tensorboard_log="./ppo_sb_tensorboard/",
-                     learning_rate=learning_rate)
-
-    model.learn(total_timesteps=1000000, tb_log_name='SafeRL')
-    model.save("unity_SafeRL_model.pkl")
-
-    environment.close()
