@@ -159,3 +159,4 @@ examples/unity-vsrl-trainer/vsrl-trainer/Library
 examples/unity-vsrl-trainer/vsrl-trainer/Temp
 examples/unity-vsrl-trainer/vsrl-trainer/Packages
 ML-Agents.meta
+*.sln
