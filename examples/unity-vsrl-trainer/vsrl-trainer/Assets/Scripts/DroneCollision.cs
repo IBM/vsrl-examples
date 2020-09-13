@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+
+Copyright (C) 2020 IBM. All Rights Reserved.
+
+See LICENSE.txt file in the root directory
+of this source tree for licensing information.
+
+*/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +40,7 @@ public class DroneCollision : MonoBehaviour
                 transform.position.y,
                 targetDelivery.transform.position.z);
 
-            transform.position = 
+            transform.position =
                 Vector3.MoveTowards(
                 transform.position,
                 target,
@@ -56,7 +65,7 @@ public class DroneCollision : MonoBehaviour
                 animator.SetBool("crash", true);
             }
         }
-        
+
         else if (other.gameObject.CompareTag("target"))
         {
             animator.SetBool("crash", false);

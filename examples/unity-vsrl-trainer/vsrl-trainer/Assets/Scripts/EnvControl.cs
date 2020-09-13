@@ -1,4 +1,13 @@
-﻿using System.Collections.Generic;
+﻿/*
+
+Copyright (C) 2020 IBM. All Rights Reserved.
+
+See LICENSE.txt file in the root directory
+of this source tree for licensing information.
+
+*/
+
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -116,7 +125,7 @@ public class EnvControl : MonoBehaviour
                 }
                 else
                 {
-                    pos = GetNewDogRandomPosition();   
+                    pos = GetNewDogRandomPosition();
                 }
 
                 counter++;
@@ -149,7 +158,7 @@ public class EnvControl : MonoBehaviour
 
         return true;
     }
-    
+
     private Vector3 GetNewDogRandomPosition()
     {
         var x = Random.Range(-0.5f, 0.5f);
@@ -188,7 +197,7 @@ public class EnvControl : MonoBehaviour
             {
                 circular.Reset();
             }
-            
+
             dogIndex++;
         }
     }

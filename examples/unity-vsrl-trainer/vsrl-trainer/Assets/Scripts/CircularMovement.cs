@@ -1,3 +1,12 @@
+/*
+
+Copyright (C) 2020 IBM. All Rights Reserved.
+
+See LICENSE.txt file in the root directory
+of this source tree for licensing information.
+
+*/
+
 using System;
 using System.Numerics;
 using JetBrains.Annotations;
@@ -11,10 +20,6 @@ public class CircularMovement : MonoBehaviour
     public GameObject center;
 
     private float direction = 1.0f;
-    // private float angularSpeed = 0f;
-    // private float angle = 0f;
-    // private float currentSpeed = 0f;
-    // private float radius = 2;
 
     void Update()
     {
