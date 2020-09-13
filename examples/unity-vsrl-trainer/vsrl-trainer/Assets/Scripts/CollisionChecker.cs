@@ -1,3 +1,12 @@
+/*
+
+Copyright (C) 2020 IBM. All Rights Reserved.
+
+See LICENSE.txt file in the root directory
+of this source tree for licensing information.
+
+*/
+
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +17,7 @@ namespace FoxChicken.Scripts
     {
         private readonly float SAFE_SEP = .25f;
         private readonly float SAFE_SEP_DOG = .25f;
-        
+
         private GameObject _gameObject;
         private Transform _transform;
         private List<GameObject> _dogs;

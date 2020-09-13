@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+
+Copyright (C) 2020 IBM. All Rights Reserved.
+
+See LICENSE.txt file in the root directory
+of this source tree for licensing information.
+
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FoxChicken.Scripts;
@@ -289,7 +298,7 @@ public class ChickenAgentTrainer : Agent
         }
 
         float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-        if (distanceToTarget > 5f) // IS THIS STILL VALID?
+        if (distanceToTarget > 5f) // Agent is too far
         {
             AddReward(AIModels.FALL_PENALTY);
             EndEpisode();
